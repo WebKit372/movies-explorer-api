@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
+const { ObjectId } = mongoose.Schema.Types;
 const movieShema = new mongoose.Schema(
   {
-    country:{
+    country: {
       type: String,
       required: true,
     },
@@ -27,49 +28,48 @@ const movieShema = new mongoose.Schema(
       required: true,
       valdate: {
         validator(v) {
-          return /^http(s)?:\/\/(www\.)?[\w\d\-._~:\/?#[\]@!$&'()*+,;=]+#?$/.test(v);
+          return /^http(s)?:\/\/(www\.)?[\w\d\-._~:/?#[\]@!$&'()*+,;=]+#?$/.test(v);
         },
-        message:'Некорректный формат URL',
+        message: 'Некорректный формат URL',
       },
     },
     trailerLink: {
       type: String,
       required: true,
       validate: {
-          validator(v) {
-            return /^http(s)?:\/\/(www\.)?[\w\d\-._~:\/?#[\]@!$&'()*+,;=]+#?$/.test(v);
-          },
-          message: 'Некорректный формат URL',
+        validator(v) {
+          return /^http(s)?:\/\/(www\.)?[\w\d\-._~:/?#[\]@!$&'()*+,;=]+#?$/.test(v);
         },
+        message: 'Некорректный формат URL',
       },
-      thumbnail:{
-        type: String,
-        required: true,
-        validate: {
-          validator(v) {
-            return /^http(s)?:\/\/(www\.)?[\w\d\-._~:\/?#[\]@!$&'()*+,;=]+#?$/.test(v);
-          },
-          message: 'Некорректный формат URL',
+    },
+    thumbnail: {
+      type: String,
+      required: true,
+      validate: {
+        validator(v) {
+          return /^http(s)?:\/\/(www\.)?[\w\d\-._~:/?#[\]@!$&'()*+,;=]+#?$/.test(v);
         },
+        message: 'Некорректный формат URL',
       },
-      owner: {
-        type: ObjectId,
-        required: true,
-        ref: 'user',
-      },
-      movieId: {
-        type: Number,
-        required: true,
-      },
-      nameRU: {
-        type: String,
-        required: true,
-      },
-      nameEN: {
-        type: String,
-        required: true,
-      },
-    }
-
-  }
-)
+    },
+    owner: {
+      type: ObjectId,
+      required: true,
+      ref: 'user',
+    },
+    movieId: {
+      type: Number,
+      required: true,
+    },
+    nameRU: {
+      type: String,
+      required: true,
+    },
+    nameEN: {
+      type: String,
+      required: true,
+    },
+  },
+);
+module.exports = mongoose.model('movie', movieShema);
