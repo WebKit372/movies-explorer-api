@@ -24,10 +24,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlenght: 2,
       maxlenght: 30,
-    }
+    },
   },
   {
     versionKey: false,
   },
-)
+);
 module.exports = mongoose.model('user', userSchema);
