@@ -1,7 +1,7 @@
 const Movie = require('../models/movies');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({ owner: req.user.id })
+  Movie.find({ owner: req.user._id })
     .then((result) => res.send(result))
     .catch(next);
 };
@@ -13,7 +13,7 @@ module.exports.createMovies = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     nameRU,
     nameEN,
     thumbnail,
@@ -27,11 +27,12 @@ module.exports.createMovies = (req, res, next) => {
       year,
       description,
       image,
-      trailer,
+      trailerLink,
       nameRU,
       nameEN,
       thumbnail,
       movieId,
+      owner: req.user._id,
     },
   )
     .then((film) => res.send(film))
@@ -40,12 +41,14 @@ module.exports.createMovies = (req, res, next) => {
 module.exports.deleteMovies = (req, res, next) => {
   Movie.findById(req.params.id)
     .then((result) => {
-      if (result.owner === req.user.id) {
+      console.log(result.owner.toString());
+      console.log(req.user._id);
+      if (result.owner.toString() === req.user._id) {
         result.deleteOne()
           .then(res.send(result));
       } else {
         throw new Error('qweqweqwe');
       }
     })
-    .catch((err) => res.status(500).send('qweqweqw'));
+    .catch((err) => res.status(500).send(err.mesasge));
 };

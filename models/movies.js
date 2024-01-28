@@ -71,5 +71,8 @@ const movieShema = new mongoose.Schema(
       required: true,
     },
   },
+  {
+    versionKey: false,
+  },
 );
 module.exports = mongoose.model('movie', movieShema);
