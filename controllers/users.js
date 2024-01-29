@@ -1,12 +1,13 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
+const CustomError = require('../errors');
 
 module.exports.getUsers = (req, res) => {
   User.findById(req.user._id)
     .then((result) => res.send(result));
 };
-module.exports.patchUsers = (req, res) => {
+module.exports.patchUsers = (req, res, next) => {
   const { name, email } = req.body;
   User.findByIdAndUpdate(req.user._id, {
     name,
@@ -15,9 +16,16 @@ module.exports.patchUsers = (req, res) => {
     new: true,
     runValidators: true,
   })
-    .then((result) => res.send(result));
+    .then((result) => res.send(result))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new CustomError.BadRequest('Некорректный формат'));
+      } else {
+        next(err);
+      }
+    });
 };
-module.exports.signup = (req, res) => {
+module.exports.signup = (req, res, next) => {
   const { name = 'Default', email, password } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => {
@@ -31,11 +39,18 @@ module.exports.signup = (req, res) => {
           delete userInfo.password;
           res.send(userInfo);
         })
-        .catch((err) => res.status(500).send(err.message));
-    })
-    .catch((err) => res.status(500).send('qeqweqwe'));
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            next(new CustomError.BadRequest('Некорректный формат'));
+          } else if (err.code === 11000) {
+            next(new CustomError.Conflict('Пользователь с указанным email уже существует'));
+          } else {
+            next(err);
+          }
+        });
+    });
 };
-module.exports.signin = (req, res) => {
+module.exports.signin = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -47,5 +62,12 @@ module.exports.signin = (req, res) => {
         })
         .send('Вы авторизированы');
     })
-    .catch((err) => res.status(401).send(err.message));
+    .catch(next);
+};
+module.exports.logout = (req, res, next) => {
+  User.findById(req.user._id)
+    .then(() => {
+      res.clearCookie('token').send('Вы разлогинились');
+    })
+    .catch(next);
 };
