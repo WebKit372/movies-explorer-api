@@ -3,9 +3,11 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 const CustomError = require('../errors');
 
-module.exports.getUsers = (req, res) => {
+const { NODE_ENV, JWT_SECRET } = process.env;
+module.exports.getUsers = (req, res, next) => {
   User.findById(req.user._id)
-    .then((result) => res.send(result));
+    .then((result) => res.send(result))
+    .catch(next);
 };
 module.exports.patchUsers = (req, res, next) => {
   const { name, email } = req.body;
@@ -54,7 +56,7 @@ module.exports.signin = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'SECRET', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'SECRET', { expiresIn: '7d' });
       res
         .cookie('token', token, {
           maxAge: 3600000 * 24 * 7,
