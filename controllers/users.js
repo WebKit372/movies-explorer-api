@@ -4,14 +4,14 @@ const User = require('../models/users');
 const CustomError = require('../errors');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-module.exports.getUsers = (req, res, next) => {
+module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .then((result) => res.send(result))
     .catch(next);
 };
 module.exports.patchUsers = (req, res, next) => {
   const { name, email } = req.body;
-  User.findByIdAndUpdate(req.user._id, {
+  return User.findByIdAndUpdate(req.user._id, {
     name,
     email,
   }, {
@@ -50,7 +50,8 @@ module.exports.signup = (req, res, next) => {
             next(err);
           }
         });
-    });
+    })
+    .catch(next);
 };
 module.exports.signin = (req, res, next) => {
   const { email, password } = req.body;

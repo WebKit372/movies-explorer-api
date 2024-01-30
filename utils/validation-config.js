@@ -1,4 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
+const { regularExpression } = require('./validator');
 
 module.exports.userPatchValidation = celebrate({
   body: Joi.object().keys({
@@ -26,9 +27,9 @@ module.exports.flimCreateValidation = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().uri(),
-    trailerLink: Joi.string().required().uri(),
-    thumbnail: Joi.string().required().uri(),
+    image: Joi.string().required().pattern(regularExpression),
+    trailerLink: Joi.string().required().pattern(regularExpression),
+    thumbnail: Joi.string().required().pattern(regularExpression),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),

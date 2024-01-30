@@ -16,15 +16,14 @@ module.exports.createMovies = (req, res, next) => {
     .then((film) => res.send(film))
     .catch(next);
 };
-module.exports.deleteMovies = (req, res, next) => {
-  Movie.findById(req.params.id)
-    .then((result) => {
-      if (result.owner.toString() === req.user._id) {
-        result.deleteOne()
-          .then(res.send(result));
-      } else {
-        throw new CustomError.Forbidden('Недостаточно прав');
-      }
-    })
-    .catch(next);
-};
+module.exports.deleteMovies = (req, res, next) => Movie.findById(req.params.id)
+  .then((result) => {
+    if (result.owner.toString() === req.user._id) {
+      result.deleteOne()
+        .then(res.send(result))
+        .catch(next);
+    } else {
+      throw new CustomError.Forbidden('Недостаточно прав');
+    }
+  })
+  .catch(next);
