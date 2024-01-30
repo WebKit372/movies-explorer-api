@@ -11,8 +11,8 @@ const { userSignupValidation, userSigninValidation } = require('./utils/validati
 const { limiter } = require('./middlewares/rateLimiter');
 
 const app = express();
-const { PORT = 3000, DB_PATH = 'mongodb://127.0.0.1:27017/bitfilmsdb' } = process.env;
-mongoose.connect(DB_PATH);
+const { PORT = 3000, DB_PATH, NODE_ENV } = process.env;
+mongoose.connect(NODE_ENV === 'production' ? DB_PATH : 'mongodb://127.0.0.1:27017/bitfilmsdb');
 app.use(limiter);
 app.use(express.json());
 app.use(cookieParser());
