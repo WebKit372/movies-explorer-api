@@ -70,7 +70,7 @@ module.exports.signin = (req, res, next) => {
 module.exports.logout = (req, res, next) => {
   User.findById(req.user._id)
     .then(() => {
-      res.clearCookie('token').send('Вы разлогинились');
+      res.clearCookie('token').send({ message: 'Вы разлогинились' });
     })
     .catch(next);
 };
