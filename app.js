@@ -14,11 +14,8 @@ const app = express();
 const { PORT = 3000, DB_PATH, NODE_ENV } = process.env;
 app.use(cors({
   origin: [
-    'localhost:3001',
-    'http://webkit15pr.nomoredomainsmonster.ru',
-    'https://webkit15pr.nomoredomainsmonster.ru',
-    'http://localhost:3001',
-    'https://localhost:3001',
+    'http://webkitdiploma.nomoredomainsmonster.ru',
+    'https://webkitdiploma.nomoredomainsmonster.ru',
   ],
   credentials: true,
 }));
