@@ -23,7 +23,7 @@ module.exports.patchUsers = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new CustomError.BadRequest('Некорректный формат'));
       } else if (err.code === 11000) {
-        next(new CustomError.Conflict('Пользователь с указанным email уже существует'))
+        next(new CustomError.Conflict('Пользователь с указанным email уже существует'));
       } else {
         next(err);
       }
