@@ -16,6 +16,8 @@ app.use(cors({
   origin: [
     'http://webkitdiploma.nomoredomainsmonster.ru',
     'https://webkitdiploma.nomoredomainsmonster.ru',
+    'localhost:3001',
+    'http://localhost:3001',
   ],
   credentials: true,
 }));
